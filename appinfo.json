@@ -1,0 +1,25 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "kuzymanic@gmail.com",
+    "longName": "HelloWorld",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/alien_background.png",
+                "name": "background",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "HelloWorld",
+    "uuid": "430d8d1f-1285-47ca-9500-f97dd5e5e730",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}
