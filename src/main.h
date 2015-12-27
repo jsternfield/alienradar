@@ -21,7 +21,7 @@
 
 #define TIME_SIZE  16
 #define TIMEX      TIME_SIZE
-#define DATEX      -TIME_SIZE*3/2
+#define DATEX      4
 #define TIMEY      SCREEN_HEIGHT - TIME_SIZE
 
 #define BARX        12

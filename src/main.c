@@ -3,6 +3,10 @@
 #include "gpathbuilder.h"
 #include <time.h>
 
+// Alien blip points
+static int NUM_BLIPS = 3;
+static int blipX[3] = {SCREEN_CENTER_X, SCREEN_CENTER_X+10, SCREEN_CENTER_X-28};
+static int blipY[3] = {SCREEN_CENTER_Y, SCREEN_CENTER_Y-36, SCREEN_CENTER_Y-32};
 
 static void render_bg(Layer* layer, GContext* ctx) 
 {
@@ -35,7 +39,6 @@ static void render_bg(Layer* layer, GContext* ctx)
     // Move to the starting point of the GPath
     for (int line = 0; line < NUM_LINES; ++line)
     {
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "render_bg path (line: %d)", line);
         gpath_builder_move_to_point(builder, p0);
         
         const int px = XOFFSET + line*14;
@@ -83,7 +86,6 @@ static void render_bg(Layer* layer, GContext* ctx)
     for (int bar = 0; bar < BAR_NUM; ++bar)
     {
         bool drawBar = (BAR_NUM-bar-1 < mBatteryLevel/10);
-        APP_LOG(APP_LOG_LEVEL_DEBUG, "BARS: num: %d, draw? %d", bar, drawBar);
         if (drawBar)
         {
             GRect barRect = GRect(0, (BAR_OFFSET+SCREEN_HEIGHT-TEXT_SIZE)/BAR_NUM*bar,
@@ -96,10 +98,11 @@ static void render_bg(Layer* layer, GContext* ctx)
         }
     }
     
-    // Draw dot for BT indicator.
+    // Draw dot for BT indicator. Position is random.
     if (mIsBluetooth)
     {
-        graphics_fill_circle(ctx, GPoint(SCREEN_CENTER_X+10, SCREEN_CENTER_X-14), 4);
+        int index = rand() % NUM_BLIPS;
+        graphics_fill_circle(ctx, GPoint(blipX[index], blipY[index]), 4);
     }
 }
 
@@ -133,11 +136,10 @@ static void set_time_display(struct tm* t)
 	{
 		strftime(mTimeText, size, "%I:%M", t);
 	}
+
+    strftime(mDateText, size, "%m-%d", t);
     
-    size = sizeof("00.00.00");
-    strftime(mDateText, size, "%m-%d-%y", t);
-    
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "set_time_display: %s (%s)", mTimeText, mDateText);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "set_time_display: %s", mTimeText);
 }
 
 static void tick_handler(struct tm* t, TimeUnits units_changed)
@@ -192,7 +194,7 @@ static void window_load(Window *window)
 
     mTimeFont = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_BITWISE_16));
     mTimeText = malloc(5); // HH:MM
-    mDateText = malloc(8); // MM-DD-YY
+    mDateText = malloc(5); // MM-DD
 
     struct tm* t;
 	time_t temp;
